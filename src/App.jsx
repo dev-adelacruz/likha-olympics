@@ -22,7 +22,7 @@ const App = () => {
   const [selectedTeam, setSelectedTeam] = useState('blue');
   const [expandedEvent, setExpandedEvent] = useState(null);
 
-  // Dynamic Metadata for Sharing Previews (Slack, FB, etc.)
+  // Dynamic Metadata for Sharing Previews
   useEffect(() => {
     document.title = "LiKHA-iT Olympics Season 2 | Dashboard";
     
@@ -30,7 +30,7 @@ const App = () => {
       "og:title": "LiKHA-iT Olympics Season 2",
       "og:description": "Official Dashboard for LiKHA-iT Olympics Season 2. Track schedules, team rosters, and live battle cards!",
       "og:type": "website",
-      "og:image": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=1000&auto=format&fit=crop", // High-quality sports placeholder
+      "og:image": "https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=1000&auto=format&fit=crop",
       "twitter:card": "summary_large_image",
       "theme-color": "#2563eb"
     };
@@ -169,17 +169,17 @@ const App = () => {
           </div>
           <div className="divide-y divide-slate-100">
             {data.map((row, i) => (
-              <div key={i} className="flex items-center h-20 group hover:bg-white transition-colors">
+              <div key={i} className="flex items-center h-20 group bg-white hover:bg-slate-50 transition-colors">
                 {/* Time/Status Column */}
-                <div className="w-16 flex flex-col items-center justify-center border-r border-slate-100 bg-white group-hover:bg-slate-50 transition-colors">
+                <div className="w-16 flex flex-col items-center justify-center border-r border-slate-100 bg-white">
                   <span className="text-[10px] font-bold text-slate-400">00:00</span>
-                  <span className="text-[10px] font-black text-slate-900 tracking-tighter">FT</span>
+                  <span className="text-[10px] font-black text-slate-900 tracking-tighter uppercase">Upcoming</span>
                 </div>
                 
                 {/* Players Column */}
                 <div className="flex-grow px-6 space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-400 group-hover:text-blue-500 transition-colors truncate">
+                    <span className="text-sm font-bold text-slate-400 truncate">
                       {row.blue.join(' / ')}
                     </span>
                   </div>
@@ -192,18 +192,12 @@ const App = () => {
 
                 {/* Score Column */}
                 <div className="w-24 flex justify-around px-2 text-sm font-black italic">
-                   <div className="flex flex-col items-center">
-                      <span className="text-slate-300">-</span>
-                      <span className="text-slate-900">-</span>
-                   </div>
-                   <div className="flex flex-col items-center">
-                      <span className="text-slate-300">-</span>
-                      <span className="text-slate-900">-</span>
-                   </div>
-                   <div className="flex flex-col items-center">
-                      <span className="text-slate-300">-</span>
-                      <span className="text-slate-900">-</span>
-                   </div>
+                   {[0, 1, 2].map((setIdx) => (
+                     <div key={setIdx} className="flex flex-col items-center opacity-20">
+                        <span>-</span>
+                        <span>-</span>
+                     </div>
+                   ))}
                 </div>
               </div>
             ))}
@@ -212,8 +206,7 @@ const App = () => {
       );
     }
 
-    const blue = data.blue;
-    const white = data.white;
+    const { blue, white } = data;
 
     return (
       <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-lg overflow-hidden relative animate-in fade-in zoom-in-95 duration-300">
@@ -223,16 +216,17 @@ const App = () => {
         <h4 className="font-black italic text-xl uppercase text-slate-900 text-center mb-6">{title}</h4>
         
         <div className="grid grid-cols-11 items-center gap-2">
-          <div className="col-span-5 bg-blue-600 rounded-2xl p-5 text-white shadow-lg shadow-blue-100 relative overflow-hidden">
+          {/* Blue Column */}
+          <div className="col-span-5 rounded-2xl p-5 text-white bg-blue-600 shadow-lg shadow-blue-100 relative overflow-hidden">
             <div className="relative z-10">
-              <p className="text-[10px] font-black tracking-widest text-blue-200 uppercase mb-3">Blue Team</p>
+              <p className="text-[10px] font-black tracking-widest text-blue-100 uppercase mb-3">Blue Team</p>
               <div className="space-y-2">
                 <div>
                   <span className="text-[8px] font-bold uppercase text-white/50 block mb-0.5 tracking-tighter">Primary</span>
                   <p className="text-lg font-black italic leading-tight">{blue.primary.join(', ')}</p>
                 </div>
                 {blue.reserve?.length > 0 && (
-                  <div className="pt-2 border-t border-white/10">
+                  <div className="pt-2 border-t border-white/10 mt-2">
                     <span className="text-[8px] font-bold uppercase text-white/50 block mb-0.5 tracking-tighter">Reserve</span>
                     <p className="text-sm font-bold opacity-80">{blue.reserve.join(', ')}</p>
                   </div>
@@ -240,24 +234,31 @@ const App = () => {
               </div>
             </div>
           </div>
+
           <div className="col-span-1 flex flex-col items-center justify-center">
             <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-white text-[10px] font-black italic shadow-xl z-10 border-2 border-white">
               VS
             </div>
           </div>
-          <div className="col-span-5 bg-slate-50 rounded-2xl p-5 border border-slate-200">
-            <p className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3">White Team</p>
-            <div className="space-y-2">
-              <div>
-                <span className="text-[8px] font-bold uppercase text-slate-300 block mb-0.5 tracking-tighter">Primary</span>
-                <p className="text-lg font-black italic text-slate-900 leading-tight">{white.primary.join(', ')}</p>
-              </div>
-              {white.reserve?.length > 0 && (
-                <div className="pt-2 border-t border-slate-100">
-                  <span className="text-[8px] font-bold uppercase text-slate-300 block mb-0.5 tracking-tighter">Reserve</span>
-                  <p className="text-sm font-bold text-slate-500">{white.reserve.join(', ')}</p>
+
+          {/* White Column */}
+          <div className="col-span-5 rounded-2xl p-5 border bg-slate-50 border-slate-200 relative overflow-hidden">
+            <div className="relative z-10">
+              <p className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3">White Team</p>
+              <div className="space-y-2">
+                <div>
+                  <span className="text-[8px] font-bold uppercase text-slate-300 block mb-0.5 tracking-tighter">Primary</span>
+                  <p className="text-lg font-black italic leading-tight text-slate-900">
+                    {white.primary.join(', ')}
+                  </p>
                 </div>
-              )}
+                {white.reserve?.length > 0 && (
+                  <div className="pt-2 border-t border-slate-100 mt-2">
+                    <span className="text-[8px] font-bold uppercase text-slate-300 block mb-0.5 tracking-tighter">Reserve</span>
+                    <p className="text-sm font-bold text-slate-500">{white.reserve.join(', ')}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
